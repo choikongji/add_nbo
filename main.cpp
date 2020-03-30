@@ -4,7 +4,7 @@
 
 void usage(){
     printf("syntax : add_nbo <file1> <file2>\n");
-    printf("sample : asmd_test fp1.bin fp2.bin");
+    printf("sample : add_nbo fp1.bin fp2.bin\n");
 }
 uint32_t change1(uint32_t n){
 
@@ -19,6 +19,7 @@ uint32_t file(char *argv){
     if(fp==NULL)
     {
         printf("error");
+        exit(1);
     }
     fread(&n,4,1,fp);
     uint32_t* p1 = &n;
@@ -31,7 +32,7 @@ uint32_t file(char *argv){
 int main(int argc, char *argv[]){
     if (argc != 3) {
         usage();
-        return -1;
+        exit(1);
     }
 
 
