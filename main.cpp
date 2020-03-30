@@ -1,31 +1,42 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
-uint32_t change(uint32_t n){
+void usage(){
+    printf("syntax : add_nbo <file1> <file2>\n");
+    printf("sample : asmd_test fp1.bin fp2.bin");
+}
+uint32_t change1(uint32_t n){
 
     return ((n & 0xFF000000)>>24) | ((n & 0x00FF0000)>>8) | ((n & 0x0000FF00)<<8) | ((n & 0x000000FF)<<24);
 }
 
 
-int main(){
-    FILE *fp1, *fp2;
-    uint32_t n1, n2;
-
-    fp1 = fopen("/home/yeji/temp/qt/pro_add_nbo/fp1.bin","rb");
-    fread(&n1,4,1,fp1);
-
-    fp2 = fopen("/home/yeji/temp/qt/pro_add_nbo/fp2.bin","rb");
-    fread(&n2,4,1,fp2);
-
-    uint32_t* p1 = &n1;
-    uint32_t fp_num1 = change(*p1);
-
-    uint32_t* p2 = &n2;
-    uint32_t fp_num2 = change(*p2);
-    printf("%d(0x%x) + %d(0x%x) = %d(0x%x)\n", fp_num1, fp_num1, fp_num2, fp_num2, fp_num1+fp_num2, fp_num1+fp_num2);
-
-    fclose(fp1);
-    fclose(fp2);
+uint32_t file(char *argv){
+    FILE *fp;
+    uint32_t n;
+    fp=fopen(argv,"rb");
+    if(fp==NULL)
+    {
+        printf("error");
+    }
+    fread(&n,4,1,fp);
+    uint32_t* p1 = &n;
+    uint32_t fp_num1 = change1(*p1);
+    fclose(fp);
+    return fp_num1;
+}
 
 
+int main(int argc, char *argv[]){
+    if (argc != 3) {
+        usage();
+        return -1;
+    }
+
+
+    uint32_t a, b;
+    a= file(argv[1]);
+    b = file(argv[2]);
+    printf("%d(0x%x) + %d(0x%x) = %d(0x%x)\n", a, a, b, b, a+b, a+b);
 }
